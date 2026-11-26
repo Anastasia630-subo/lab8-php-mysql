@@ -6,9 +6,9 @@
 <p class="alert">Подозрительное поведение устройства: слишком частые запросы. Данные и управление временно недоступны.</p>
 <?php else: ?>
 <p class="temperature"><?=h($temperature)?> °C</p>
-<table><tr><th>Температура получена, UTC</th><td><?=h($temperature_dt)?></td></tr>
+<table><tr><th>Температура получена, МСК</th><td><?=h(moscow_time($temperature_dt))?></td></tr>
 <tr><th>Реле</th><td><?=$out_state === '?' ? 'Нет данных' : ($out_state ? 'Включено' : 'Выключено')?></td></tr>
-<tr><th>Состояние реле получено, UTC</th><td><?=h($out_state_dt)?></td></tr>
+<tr><th>Состояние реле получено, МСК</th><td><?=h(moscow_time($out_state_dt))?></td></tr>
 <tr><th>Сохранённая команда</th><td><?=$Command === '?' ? 'Не задана' : ($Command ? 'Включить' : 'Выключить')?></td></tr></table>
 <?php if ($role === 'operator'): ?>
 <form method="post" action="index.php" class="actions">

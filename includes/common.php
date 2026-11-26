@@ -21,6 +21,11 @@ header('X-Content-Type-Options: nosniff');
 function h($value) {
     return htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
+function moscow_time($value) {
+    if ($value === null || $value === '' || $value === '?') return 'Нет данных';
+    return (new DateTimeImmutable($value, new DateTimeZone('UTC')))
+        ->setTimezone(new DateTimeZone('Europe/Moscow'))->format('d.m.Y H:i:s');
+}
 function stop_request($code, $message) {
     global $connection;
     if ($connection->inTransaction()) $connection->rollBack();
