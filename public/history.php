@@ -18,7 +18,7 @@ $actions = ['view' => 'Просмотр', 'control' => 'Управление', '
 $results = ['allowed' => 'Разрешено', 'forbidden' => 'Нет права', 'user_blocked' => 'Блокировка пользователя', 'device_blocked' => 'Блокировка устройства'];
 ?>
 <!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>История управления</title><link rel="stylesheet" href="style.css"></head>
-<body><main><p><a href="index.php">← Мои устройства</a></p><h1>История управления</h1><p>Последние 100 событий. Время UTC.</p>
-<div class="scroll"><table><thead><tr><th>Время</th><th>Пользователь</th><th>Действие</th><th>Команда</th><th>Результат</th></tr></thead><tbody>
-<?php foreach ($history as $Arr): ?><tr><td><?=h($Arr['DATE_TIME'])?></td><td><?=h($Arr['LOGIN'])?></td><td><?=h($actions[$Arr['ACTION']])?></td><td><?=$Arr['COMMAND'] === null ? '—' : ($Arr['COMMAND'] ? 'Включить' : 'Выключить')?></td><td><?=h($results[$Arr['RESULT']])?></td></tr><?php endforeach ?>
+<body><main><p><a href="index.php">← Мои устройства</a></p><h1>История управления</h1><p>Последние 100 событий.</p>
+<div class="scroll"><table><thead><tr><th>Время, МСК</th><th>Пользователь</th><th>Действие</th><th>Команда</th><th>Результат</th></tr></thead><tbody>
+<?php foreach ($history as $Arr): ?><tr><td><?=h(moscow_time($Arr['DATE_TIME']))?></td><td><?=h($Arr['LOGIN'])?></td><td><?=h($actions[$Arr['ACTION']])?></td><td><?=$Arr['COMMAND'] === null ? '—' : ($Arr['COMMAND'] ? 'Включить' : 'Выключить')?></td><td><?=h($results[$Arr['RESULT']])?></td></tr><?php endforeach ?>
 </tbody></table></div></main></body></html>
