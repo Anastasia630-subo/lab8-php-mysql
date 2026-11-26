@@ -6,7 +6,7 @@ CREATE TABLE users (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(64) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE devices (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -17,7 +17,7 @@ CREATE TABLE devices (
     window_start DATETIME(6) NULL,
     request_count INT UNSIGNED NOT NULL DEFAULT 0,
     blocked_until DATETIME(6) NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE device_access (
     user_id BIGINT UNSIGNED NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE device_access (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (device_id) REFERENCES devices(id),
     CONSTRAINT ck_access_role CHECK (role IN ('viewer', 'operator'))
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE device_state (
     device_id BIGINT UNSIGNED PRIMARY KEY,
@@ -44,7 +44,7 @@ CREATE TABLE device_state (
     CHECK (temperature IS NULL OR temperature BETWEEN -55 AND 125),
     CHECK (relay IS NULL OR relay IN (0,1)),
     CHECK (command IS NULL OR command IN (0,1))
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE user_events (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -61,7 +61,7 @@ CREATE TABLE user_events (
         OR (action <> 'control' AND command IS NULL)),
     CHECK (outcome IN ('allowed','user_blocked','device_blocked','forbidden')),
     INDEX ix_user_history (device_id, happened_at, id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE device_events (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -71,7 +71,7 @@ CREATE TABLE device_events (
     FOREIGN KEY (device_id) REFERENCES devices(id),
     CHECK (outcome IN ('allowed','blocked')),
     INDEX ix_device_history (device_id, happened_at, id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- Представление не содержит паролей и ключей устройств.
 CREATE VIEW v_device_dashboard AS
