@@ -6,11 +6,10 @@ PHP и MySQL. Основа: [уроки 1–4 LAZY SMART](https://lazysmart.ru/u
 
 ## Запуск
 
-1. Создать пустую базу MySQL 8.0.16+ с кодировкой `utf8mb4`.
-2. Импортировать `sql/schema.sql`, затем `sql/triggers.sql`.
-3. Скопировать `includes/config.example.php` в `includes/config.php` и указать подключение к БД.
-4. Выполнить `php seed.php`, затем `php -S 127.0.0.1:8080 -t public` (PHP 8.1+ с PDO MySQL).
-5. Открыть `http://127.0.0.1:8080/login.php`. Учебный вход: `nastya` / `Demo_251361!`.
+1. Импортировать `sql/schema.sql` и `sql/triggers.sql` в MySQL.
+2. Скопировать `includes/config.example.php` в `includes/config.php` и указать подключение к БД.
+3. Выполнить `php seed.php`, затем `php -S 127.0.0.1:8080 -t public`.
+4. Открыть `http://127.0.0.1:8080/login.php`. Учебный вход: `nastya` / `Demo_251361!`.
 
 Подключение к БД находится в `includes/connect.php`, карточка устройства в `includes/device_template.php`.
 На странице доступны команды реле, симулятор показаний и история.
