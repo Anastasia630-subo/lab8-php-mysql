@@ -1,28 +1,29 @@
 <?php
-require dirname(__DIR__) . '/app/bootstrap.php';
-startSession();
+require dirname(__DIR__) . '/includes/common.php';
+start_session();
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    csrf();
-    $name = $_POST['username'] ?? '';
-    $pass = $_POST['password'] ?? '';
-    if (!is_string($name) || !is_string($pass) || strlen($name)>64 || strlen($pass)>1024) {
-        fail(400, 'Некорректные данные');
-    }
-    $u = query('SELECT id,password_hash FROM users WHERE username=?', [$name])->fetch();
-    // Фиктивный хеш делает проверку несуществующего имени сопоставимой по времени.
-    $hash = $u['password_hash'] ?? '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi';
-    if (password_verify($pass, $hash) && $u) {
+    check_csrf();
+    $login = $_POST['login'] ?? '';
+    $password = $_POST['password'] ?? '';
+    if (!is_string($login) || !is_string($password) || strlen($login) > 64 || strlen($password) > 200) stop_request(400, 'Проверьте данные для входа.');
+    $query = 'SELECT USER_ID, PASSWORD FROM USER_TABLE WHERE LOGIN=?';
+    $result = $connection->prepare($query);
+    $result->execute([$login]);
+    $Arr = $result->fetch();
+    if ($Arr && password_verify($password, $Arr['PASSWORD'])) {
         session_regenerate_id(true);
-        $_SESSION['user_id'] = (int)$u['id'];
-        $_SESSION['csrf'] = bin2hex(random_bytes(32));
-        header('Location: index.php', true, 303); exit;
+        $_SESSION['user_id'] = $Arr['USER_ID'];
+        $_SESSION['csrf'] = bin2hex(random_bytes(24));
+        header('Location: index.php'); exit;
     }
-    http_response_code(401); $error = 'Неверный логин или пароль';
+    http_response_code(401);
+    $error = 'Неверный логин или пароль.';
 }
-page('Вход', function () use ($error) { ?>
-<form method="post" class="login"><input type="hidden" name="csrf" value="<?=h($_SESSION['csrf'])?>">
-<label>Логин<input name="username" required maxlength="64" autocomplete="username"></label>
-<label>Пароль<input type="password" name="password" required autocomplete="current-password"></label>
-<?php if ($error): ?><p class="alert"><?=h($error)?></p><?php endif ?><button>Войти</button></form>
-<?php });
+?>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Вход</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="login"><h1>Управление устройствами</h1><form method="post">
+<input type="hidden" name="csrf" value="<?=h($_SESSION['csrf'])?>">
+<label>Логин<input name="login" required maxlength="64" autocomplete="username"></label>
+<label>Пароль<input type="password" name="password" required maxlength="200" autocomplete="current-password"></label>
+<?php if ($error): ?><p class="alert"><?=h($error)?></p><?php endif ?><button>Войти</button></form></main></body></html>

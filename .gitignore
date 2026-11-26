@@ -1,4 +1,2 @@
-/config/local.php
-/var/*
-!/var/.gitkeep
-/tests/credentials.json
+/includes/config.php
+/var/
